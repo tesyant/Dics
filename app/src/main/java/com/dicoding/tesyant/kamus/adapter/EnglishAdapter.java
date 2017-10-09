@@ -26,15 +26,6 @@ public class EnglishAdapter extends RecyclerView.Adapter<EnglishAdapter.EnglishH
 
     CustomItemClickListener listener;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView vocab;
-
-        public MyViewHolder(View view) {
-            super(view);
-            vocab = (TextView)view.findViewById(R.id.tv_itemvocab);
-        }
-    }
-
     public EnglishAdapter (Context context, ArrayList<String> data, CustomItemClickListener listener) {
         this.context = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -45,12 +36,12 @@ public class EnglishAdapter extends RecyclerView.Adapter<EnglishAdapter.EnglishH
     @Override
     public EnglishHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_english, parent, false);
+                .inflate(R.layout.item_english_row, parent, false);
         final EnglishHolder myViewHolder = new EnglishHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onItemClick(view, myViewHolder.getAdapterPosition() );
+                listener.onItemClick(view, myViewHolder.getAdapterPosition());
             }
         });
         return myViewHolder;
@@ -74,7 +65,7 @@ public class EnglishAdapter extends RecyclerView.Adapter<EnglishAdapter.EnglishH
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return 0;
     }
 
     @Override
@@ -87,7 +78,6 @@ public class EnglishAdapter extends RecyclerView.Adapter<EnglishAdapter.EnglishH
 
         public EnglishHolder(View itemView) {
             super(itemView);
-
             tvVocab = (TextView) itemView.findViewById(R.id.tv_itemvocab);
         }
     }

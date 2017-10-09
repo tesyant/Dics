@@ -1,5 +1,6 @@
 package com.dicoding.tesyant.kamus.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dicoding.tesyant.kamus.R;
-import com.dicoding.tesyant.kamus.model.IndonesiaModel;
 
 import java.util.ArrayList;
 
@@ -19,31 +19,39 @@ import java.util.ArrayList;
 
 public class IndonesiaAdapter extends RecyclerView.Adapter<IndonesiaAdapter.IndonesiaHolder> {
 
-    private ArrayList<IndonesiaModel> mData = new ArrayList<>();
+    private ArrayList<String> mData = new ArrayList<>();
     Context context;
     private LayoutInflater mInflater;
+    private Activity activity;
 
-    public IndonesiaAdapter (Context context, ArrayList<IndonesiaModel> data) {
+    CustomItemClickListener listener;
+
+    public IndonesiaAdapter (Context context, ArrayList<String> data, CustomItemClickListener listener) {
         this.context = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mData = data;
+        this.listener = listener;
     }
 
 
     @Override
     public IndonesiaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    public void addItem(ArrayList<IndonesiaModel> mData) {
-        this.mData = mData;
-        notifyDataSetChanged();
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_english_row, parent, false);
+        final IndonesiaHolder myViewHolder = new IndonesiaHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(view, myViewHolder.getAdapterPosition());
+            }
+        });
+        return myViewHolder;
     }
 
     @Override
     public void onBindViewHolder(IndonesiaHolder holder, int position) {
-        holder.tvVocab.setText(mData.get(position).getVocab());
-        Log.e("Check", "word " + mData.get(position).getVocab() + "inserted");
+        holder.tvVocab.setText(mData.get(position).toString().trim());
+        Log.e("Check", "word " + mData.get(position).toString() + "inserted");
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.dicoding.tesyant.kamus.adapter.CustomItemClickListener;
 import com.dicoding.tesyant.kamus.adapter.EnglishAdapter;
@@ -70,7 +69,10 @@ public class EnglishActivity extends Activity implements View.OnClickListener{
         EnglishAdapter customAdapter = new EnglishAdapter(getApplicationContext(), result, new CustomItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Toast.makeText(EnglishActivity.this, "ok", Toast.LENGTH_SHORT).show();
+                String id = results[position];
+                Intent intent = new Intent(EnglishActivity.this, DetailActivity.class);
+                intent.putExtra("vocabId", id);
+                startActivity(intent);
             }
         });
 
