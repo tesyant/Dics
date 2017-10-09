@@ -23,7 +23,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static String IND_ID = "ind_id";
     public static String ENG_VOCAB = "eng_vocab";
     public static String IND_VOCAB = "ind_vocab";
-    public static String IND_WORD = "ind_word";
     public static String ENG_MEANS = "eng_means";
     public static String IND_MEANS = "ind_means";
 
@@ -34,11 +33,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + ENG_MEANS + " TEXT NOT NULL );" ;
 
 
-    public static String CREATE_TABLE_INDOENG = "create table" + TABLE_IND + " ("
-            + IND_ID + " integer primary key autoincrement, "
-            + IND_VOCAB + " text not null, "
-            + IND_WORD + " text not null, "
-            + IND_MEANS + " text not null);";
+    public static final String CREATE_TABLE_INDOENG = "CREATE TABLE " + TABLE_IND
+            + "("
+            + IND_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
+            + IND_VOCAB + " TEXT NOT NULL , "
+            + IND_MEANS + " TEXT NOT NULL );" ;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -47,12 +46,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_ENGLISHIND);
+        db.execSQL(CREATE_TABLE_INDOENG);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENG);
-       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_IND);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IND);
         onCreate(db);
     }
 }

@@ -7,15 +7,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dicoding.tesyant.kamus.adapter.CustomItemClickListener;
 import com.dicoding.tesyant.kamus.adapter.EnglishAdapter;
 import com.dicoding.tesyant.kamus.helper.EnglishHelper;
 
-public class EnglishActivity extends Activity {
+import java.util.ArrayList;
+
+public class EnglishActivity extends Activity implements View.OnClickListener{
 
     RecyclerView recyclerView;
     EnglishAdapter englishAdapter;
@@ -23,7 +26,7 @@ public class EnglishActivity extends Activity {
 
     Toolbar toolbar;
     EditText editText;
-
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class EnglishActivity extends Activity {
 
         editText = (EditText)findViewById(R.id.edt_search);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        button = (Button)findViewById(R.id.btn_search);
+        button.setOnClickListener(this);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -45,69 +50,33 @@ public class EnglishActivity extends Activity {
         englishHelper.open();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        editText.setOnKeyListener(new View.OnKeyListener() {
+    @Override
+    public void onClick(View view) {
+        String word = editText.getText().toString().trim();
+        ArrayList<String> result = new ArrayList<>();
+        result = englishHelper.getData(word);
+
+        final String[] results = new String[result.size()];
+
+        if (result.size()>0) {
+            for (int i = 0; i<result.size(); i++) {
+                results[i] = result.get(i);
+                Log.e("check", "query " + i + " is " + results[i]);
+            }
+        }
+
+        EnglishAdapter customAdapter = new EnglishAdapter(getApplicationContext(), result, new CustomItemClickListener() {
             @Override
-            public boolean onKey(View view, int actionId, KeyEvent keyEvent) {
-                String word = editText.getText().toString().trim();
-                String result = englishHelper.getData(word);
-                int result_size = result.length();
-                final String[] list_vocab = new String[result_size];
-                for (int i = 0; i<result_size; i++) {
-                    list_vocab[i] = String.valueOf(result);
-                    Toast.makeText(EnglishActivity.this, (list_vocab[i]), Toast.LENGTH_SHORT).show();
-                    Log.e("check", "list " + list_vocab[i] + " ok");
-                }
-
-
-
-                return false;
+            public void onItemClick(View v, int position) {
+                Toast.makeText(EnglishActivity.this, "ok", Toast.LENGTH_SHORT).show();
             }
         });
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(customAdapter);
     }
-
-
-    //        String word = editText.getText().toString();
-//        String result = englishHelper.getData(word);
-
-
-
-
-
-//        ArrayList<EnglishModel> vocabs = new ArrayList<>();
-//        int size = vocabs.size();
-//        final String[] list_kata_id = new String[size];
-//        for (int i=0; i<size; i++) {
-//            list_kata_id[i] = String.valueOf(result);
-//        }
-//
-//        EnglishAdapter customAdapter = new EnglishAdapter(vocabs, EnglishActivity.this, new CustomItemClickListener() {
-//            @Override
-//            public void onItemClick(View v, int position) {
-//                String id = list_kata_id[position];
-//                Intent intent = new Intent(EnglishActivity.this, DetailActivity.class);
-//                intent.putExtra("wordId", id);
-//                startActivity(intent);
-//            }
-//        });
-//
-//
-//
-//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//
-//        recyclerView.setLayoutManager(llm);
-//        recyclerView.setAdapter(customAdapter);
-
-
-//        ArrayList<EnglishModel> englishModels = englishHelper.getAllData();
-//
-//        englishAdapter = new EnglishAdapter(this, englishModels);
-//        recyclerView.setAdapter(englishAdapter);
-//
-//englishHelper.searchQueryByName(editText.getText().toString());
-//englishAdapter = new EnglishAdapter(editText.getText().toString());
-//englishHelper.close();
-//        englishAdapter.addItem(englishModels);
 }

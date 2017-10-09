@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPreExecute() {
             englishHelper = new EnglishHelper(MainActivity.this);
             appPreference = new AppPreference(MainActivity.this);
+
         }
 
         @Override
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         else if (id == R.id.nav_inen) {
-            startActivity(new Intent(getApplicationContext(), EnglishActivity.class));
+            startActivity(new Intent(getApplicationContext(), IndonesiaActivity.class));
 
         }
 

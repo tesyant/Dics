@@ -1,5 +1,6 @@
 package com.dicoding.tesyant.kamus.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dicoding.tesyant.kamus.R;
-import com.dicoding.tesyant.kamus.model.EnglishModel;
 
 import java.util.ArrayList;
 
@@ -19,31 +19,52 @@ import java.util.ArrayList;
 
 public class EnglishAdapter extends RecyclerView.Adapter<EnglishAdapter.EnglishHolder> {
 
-    private ArrayList<EnglishModel> mData = new ArrayList<>();
+    private ArrayList<String> mData = new ArrayList<>();
     Context context;
     private LayoutInflater mInflater;
+    private Activity activity;
 
-    public EnglishAdapter (Context context, ArrayList<EnglishModel> data) {
+    CustomItemClickListener listener;
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView vocab;
+
+        public MyViewHolder(View view) {
+            super(view);
+            vocab = (TextView)view.findViewById(R.id.tv_itemvocab);
+        }
+    }
+
+    public EnglishAdapter (Context context, ArrayList<String> data, CustomItemClickListener listener) {
         this.context = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mData = data;
+        this.listener = listener;
     }
-
 
     @Override
     public EnglishHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_english, parent, false);
+        final EnglishHolder myViewHolder = new EnglishHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(view, myViewHolder.getAdapterPosition() );
+            }
+        });
+        return myViewHolder;
     }
 
-    public void addItem(ArrayList<EnglishModel> mData) {
+    public void addItem(ArrayList<String> mData) {
         this.mData = mData;
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(EnglishHolder holder, int position) {
-        holder.tvVocab.setText(mData.get(position).getVocab());
-        Log.e("Check", "word " + mData.get(position).getVocab() + "inserted");
+        holder.tvVocab.setText(mData.get(position).toString().trim());
+        Log.e("Check", "word " + mData.get(position).toString() + "inserted");
     }
 
     @Override

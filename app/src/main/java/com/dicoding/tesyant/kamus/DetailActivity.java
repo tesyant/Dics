@@ -15,7 +15,7 @@ public class DetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        String WORD_ID = "";
+        String VOCAB_ID = "";
 
         detailWord = (TextView)findViewById(R.id.dtl_word);
         detailMeaning = (TextView)findViewById(R.id.dtl_meaning);
@@ -24,14 +24,15 @@ public class DetailActivity extends Activity {
         Bundle bundle = intent.getExtras();
 
         if (bundle != null) {
-            WORD_ID = (String) bundle.get("wordId".toString());
-            Log.e("Check", "Word ID : " + WORD_ID);
+            VOCAB_ID = (String) bundle.get("vocabId".toString());
+            Log.e("Check", "Word ID : " + VOCAB_ID);
         }
+
 
     }
 
-    private void SetText(String word, String meaning) {
-        detailWord.setText(word);
+    private void SetText(String vocab, String meaning) {
+        detailWord.setText(vocab);
         detailMeaning.setText(meaning);
     }
 

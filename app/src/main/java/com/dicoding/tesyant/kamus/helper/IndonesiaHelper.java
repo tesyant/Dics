@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-import com.dicoding.tesyant.kamus.model.EnglishModel;
+import com.dicoding.tesyant.kamus.model.IndonesiaModel;
 
 import java.util.ArrayList;
 
@@ -16,18 +16,18 @@ import java.util.ArrayList;
  * Created by tesyant on 10/5/17.
  */
 
-public class EnglishHelper {
+public class IndonesiaHelper {
 
-    private static String DATABASE_TABLE = DatabaseHelper.TABLE_ENG;
+    private static String DATABASE_TABLE = DatabaseHelper.TABLE_IND;
     private Context context;
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
 
-    public EnglishHelper(Context context) {
+    public IndonesiaHelper(Context context) {
         this.context = context;
     }
 
-    public EnglishHelper open() throws SQLException {
+    public IndonesiaHelper open() throws SQLException {
         databaseHelper = new DatabaseHelper(context);
         database = databaseHelper.getWritableDatabase();
         return this;
@@ -39,12 +39,12 @@ public class EnglishHelper {
 
     public Cursor searchQueryByName (String query) {
         return database.rawQuery("SELECT * FROM " + DATABASE_TABLE + " WHERE " +
-                DatabaseHelper.ENG_VOCAB + " LIKE '%" + query + "%'", null);
+                DatabaseHelper.IND_VOCAB + " LIKE '%" + query + "%'", null);
     }
 
     public final ArrayList<String> getData(String search) {
         Cursor cursor = searchQueryByName(search);
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<String>();
         cursor.moveToFirst();
         if (cursor.getCount()>0) {
             cursor.moveToFirst();
@@ -59,22 +59,22 @@ public class EnglishHelper {
 
     public Cursor queryAllData() {
         return database.rawQuery("SELECT * FROM " + DATABASE_TABLE + " ORDER BY " +
-        DatabaseHelper.ENG_ID + " ASC", null);
+                DatabaseHelper.IND_ID + " ASC", null);
     }
 
-    public ArrayList<EnglishModel> getAllData() {
-        ArrayList<EnglishModel> arrayList = new ArrayList<>();
+    public ArrayList<IndonesiaModel> getAllData() {
+        ArrayList<IndonesiaModel> arrayList = new ArrayList<>();
         Cursor cursor = queryAllData();
         cursor.moveToFirst();
-        EnglishModel englishModel;
+        IndonesiaModel indonesiaModel;
         if (cursor.getCount()>0) {
             do {
-                englishModel = new EnglishModel();
-                englishModel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_ID)));
-                englishModel.setVocab(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_VOCAB)));
-                englishModel.setMeans(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_MEANS)));
+                indonesiaModel = new IndonesiaModel();
+                indonesiaModel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.IND_ID)));
+                indonesiaModel.setVocab(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.IND_VOCAB)));
+                indonesiaModel.setMeans(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.IND_MEANS)));
 
-                arrayList.add(englishModel);
+                arrayList.add(indonesiaModel);
                 cursor.moveToNext();
             }
             while (!cursor.isAfterLast());
@@ -83,24 +83,24 @@ public class EnglishHelper {
         return arrayList;
     }
 
-    public long insert(EnglishModel englishModel) {
+    public long insert(IndonesiaModel indonesiaModel) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(DatabaseHelper.ENG_VOCAB, englishModel.getVocab());
-        initialValues.put(DatabaseHelper.ENG_MEANS, englishModel.getMeans());
+        initialValues.put(DatabaseHelper.IND_VOCAB, indonesiaModel.getVocab());
+        initialValues.put(DatabaseHelper.IND_MEANS, indonesiaModel.getMeans());
         Log.d("insert", "check");
         return database.insert(DATABASE_TABLE, null, initialValues);
     }
 
-    public void insertTransaction(ArrayList<EnglishModel> englishModels) {
+    public void insertTransaction(ArrayList<IndonesiaModel> indonesiaModels) {
         String sql = "INSERT INTO " + DATABASE_TABLE + " ("
-                + DatabaseHelper.ENG_VOCAB + ", "
-                + DatabaseHelper.ENG_MEANS + ", " + ") VALUES (?, ?, ?, ?);";
+                + DatabaseHelper.IND_VOCAB + ", "
+                + DatabaseHelper.IND_MEANS + ", " + ") VALUES (?, ?, ?, ?);";
         database.beginTransaction();
 
         SQLiteStatement statement = database.compileStatement(sql);
-        for (int i = 0; i < englishModels.size(); i++) {
-            statement.bindString(1, englishModels.get(i).getVocab());
-            statement.bindString(3, englishModels.get(i).getMeans());
+        for (int i = 0; i < indonesiaModels.size(); i++) {
+            statement.bindString(1, indonesiaModels.get(i).getVocab());
+            statement.bindString(3, indonesiaModels.get(i).getMeans());
             statement.execute();
             statement.clearBindings();
         }
@@ -109,17 +109,17 @@ public class EnglishHelper {
         database.endTransaction();
     }
 
-    public void update(EnglishModel englishModel) {
+    public void update(IndonesiaModel indonesiaModel) {
         ContentValues args = new ContentValues();
-        args.put(DatabaseHelper.ENG_VOCAB, englishModel.getVocab());
-        args.put(DatabaseHelper.ENG_MEANS, englishModel.getMeans());
-        database.update(DATABASE_TABLE, args, DatabaseHelper.ENG_ID + "= '"
-        + englishModel.getId() + "'", null);
+        args.put(DatabaseHelper.IND_VOCAB, indonesiaModel.getVocab());
+        args.put(DatabaseHelper.IND_MEANS, indonesiaModel.getMeans());
+        database.update(DATABASE_TABLE, args, DatabaseHelper.IND_ID + "= '"
+                + indonesiaModel.getId() + "'", null);
     }
 
     public void delete(int id) {
-        database.delete(DatabaseHelper.TABLE_ENG, DatabaseHelper.ENG_ID + " = '" + id
-        + "'", null);
+        database.delete(DatabaseHelper.TABLE_IND, DatabaseHelper.IND_ID + " = '" + id
+                + "'", null);
     }
 
 
