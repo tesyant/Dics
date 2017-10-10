@@ -42,6 +42,23 @@ public class EnglishHelper {
                 DatabaseHelper.ENG_VOCAB + " LIKE '%" + query + "%'", null);
     }
 
+    public Cursor searchMeanByVocab (String query) {
+        return database.rawQuery("SELECT * FROM " + DATABASE_TABLE + " WHERE " +
+        DatabaseHelper.ENG_VOCAB + " = '" + query + "'", null);
+    }
+
+    public final String getMeaningData(String search) {
+        Cursor cursor = searchMeanByVocab(search);
+        String result = new String();
+        cursor.moveToFirst();
+        if (cursor.getCount()>0) {
+            cursor.moveToFirst();
+            result = cursor.getString(2);
+        }
+        cursor.close();
+        return result;
+    }
+
     public final ArrayList<String> getData(String search) {
         Cursor cursor = searchQueryByName(search);
         ArrayList<String> result = new ArrayList<>();
@@ -71,6 +88,26 @@ public class EnglishHelper {
             do {
                 englishModel = new EnglishModel();
                 englishModel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_ID)));
+                englishModel.setVocab(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_VOCAB)));
+                englishModel.setMeans(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_MEANS)));
+
+                arrayList.add(englishModel);
+                cursor.moveToNext();
+            }
+            while (!cursor.isAfterLast());
+        }
+        cursor.close();
+        return arrayList;
+    }
+
+    public ArrayList<EnglishModel> getDetailData() {
+        ArrayList<EnglishModel> arrayList = new ArrayList<>();
+        Cursor cursor = queryAllData();
+        cursor.moveToFirst();
+        EnglishModel englishModel;
+        if (cursor.getCount()>0) {
+            do {
+                englishModel = new EnglishModel();
                 englishModel.setVocab(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_VOCAB)));
                 englishModel.setMeans(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ENG_MEANS)));
 

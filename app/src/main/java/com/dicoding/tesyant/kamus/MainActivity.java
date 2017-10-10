@@ -14,9 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.dicoding.tesyant.kamus.helper.EnglishHelper;
+import com.dicoding.tesyant.kamus.helper.IndonesiaHelper;
 import com.dicoding.tesyant.kamus.model.EnglishModel;
+import com.dicoding.tesyant.kamus.model.IndonesiaModel;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     private class LoadData extends AsyncTask<Void, Integer, Void> {
         EnglishHelper englishHelper;
+        IndonesiaHelper indonesiaHelper;
         AppPreference appPreference;
         double progress;
         double maxprogress = 100;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             englishHelper = new EnglishHelper(MainActivity.this);
+            indonesiaHelper = new IndonesiaHelper(MainActivity.this);
             appPreference = new AppPreference(MainActivity.this);
 
         }
@@ -71,26 +76,26 @@ public class MainActivity extends AppCompatActivity
 
             if (firstRun) {
                 ArrayList<EnglishModel> englishModels = preLoadRaw();
+                ArrayList<IndonesiaModel> indonesiaModels = preLoadIndRaw();
                 Log.d("size", " " +englishModels.size());
                 progress = 30;
                 publishProgress((int)progress);
                 englishHelper.open();
+                indonesiaHelper.open();
 
                 Double progressMaxInsert = 80.0;
                 Double progressDiff = (progressMaxInsert - progress) / englishModels.size();
+                Double progressDiffInd = (progressMaxInsert - progress) / indonesiaModels.size();
 
-                for (EnglishModel model : englishModels) {
-                    englishHelper.insert(model);
-                    Log.e("Check Insert", model.getVocab() + "inserted");
-                    progress += progressDiff;
-
-                    publishProgress((int)progress);
-                }
+                englishHelper.insertTransaction(englishModels);
+                indonesiaHelper.insertTransaction(indonesiaModels);
 
                 englishHelper.close();
+                indonesiaHelper.close();
                 appPreference.setFirstRun(false);
 
                 publishProgress((int)maxprogress);
+
             }
 
             else {
@@ -116,9 +121,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void result) {
-            Intent intent = new Intent(MainActivity.this, EnglishActivity.class);
-            startActivity(intent);
-            finish();
+            Toast.makeText(MainActivity.this, "Data has been saved", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -147,6 +150,31 @@ public class MainActivity extends AppCompatActivity
         return englishModels;
     }
 
+    public ArrayList<IndonesiaModel> preLoadIndRaw() {
+        ArrayList<IndonesiaModel> indonesiaModels = new ArrayList<>();
+        String line = null;
+        BufferedReader reader;
+        try {
+            Resources resources = getResources();
+            InputStream raw_dict = resources.openRawResource(R.raw.indonesia_english);
+            reader = new BufferedReader(new InputStreamReader(raw_dict));
+            int count = 0;
+            do {
+                line = reader.readLine();
+                String[] splitstr = line.split("\t");
+                IndonesiaModel indonesiaModel;
+                indonesiaModel = new IndonesiaModel(splitstr[0], splitstr[1]);
+                indonesiaModels.add(indonesiaModel);
+                count++;
+            }
+            while (line != null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return indonesiaModels;
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -161,7 +189,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        return false;
     }
 
     @Override

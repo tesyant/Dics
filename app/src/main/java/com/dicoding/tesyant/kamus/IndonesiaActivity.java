@@ -2,6 +2,7 @@ package com.dicoding.tesyant.kamus;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dicoding.tesyant.kamus.adapter.CustomItemClickListener;
-import com.dicoding.tesyant.kamus.adapter.EnglishAdapter;
 import com.dicoding.tesyant.kamus.adapter.IndonesiaAdapter;
 import com.dicoding.tesyant.kamus.helper.IndonesiaHelper;
 
@@ -27,6 +27,8 @@ public class IndonesiaActivity extends Activity implements View.OnClickListener{
     Toolbar toolbar;
     EditText editText;
     Button button;
+
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class IndonesiaActivity extends Activity implements View.OnClickListener{
         indonesiaHelper.open();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     @Override
@@ -71,7 +74,7 @@ public class IndonesiaActivity extends Activity implements View.OnClickListener{
             @Override
             public void onItemClick(View v, int position) {
                 String id = results[position];
-                Intent intent = new Intent(IndonesiaActivity.this, DetailActivity.class);
+                Intent intent = new Intent(IndonesiaActivity.this, DetailIndActivity.class);
                 intent.putExtra("vocabId", id);
                 startActivity(intent);
             }
@@ -82,4 +85,5 @@ public class IndonesiaActivity extends Activity implements View.OnClickListener{
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(customAdapter);
     }
+
 }

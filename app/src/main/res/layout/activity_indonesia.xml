@@ -16,16 +16,32 @@
         app:title="Kamus"
         app:titleTextColor="@android:color/white" />
 
-    <EditText
-        android:id="@+id/edt_search"
-        android:layout_width="250dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:inputType="text"/>
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/edt_search"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:inputType="text"/>
+
+        <Button
+            android:id="@+id/btn_search"
+            android:text="SEARCH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"

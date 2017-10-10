@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.dicoding.tesyant.kamus.helper.EnglishHelper;
+
 public class DetailActivity extends Activity {
 
     TextView detailWord, detailMeaning;
@@ -18,7 +20,7 @@ public class DetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        String VOCAB_ID = "";
+        String VOCAB = "";
 
         detailWord = (TextView)findViewById(R.id.dtl_word);
         detailMeaning = (TextView)findViewById(R.id.dtl_meaning);
@@ -35,12 +37,15 @@ public class DetailActivity extends Activity {
         Bundle bundle = intent.getExtras();
 
         if (bundle != null) {
-            VOCAB_ID = (String) bundle.get("vocabId").toString();
-            Log.e("Check", "Word ID : " + VOCAB_ID);
+            VOCAB = (String) bundle.get("vocabId").toString();
+            Log.e("Check", "Word ID : " + VOCAB);
         }
 
+        EnglishHelper englishHelper = new EnglishHelper(this);
+        englishHelper.open();
 
-
+        String MEAN = englishHelper.getMeaningData(VOCAB);
+        SetText(VOCAB, MEAN);
     }
 
     private void SetText(String vocab, String meaning) {

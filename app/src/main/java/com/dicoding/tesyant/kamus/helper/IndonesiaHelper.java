@@ -23,6 +23,7 @@ public class IndonesiaHelper {
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
 
+
     public IndonesiaHelper(Context context) {
         this.context = context;
     }
@@ -40,6 +41,23 @@ public class IndonesiaHelper {
     public Cursor searchQueryByName (String query) {
         return database.rawQuery("SELECT * FROM " + DATABASE_TABLE + " WHERE " +
                 DatabaseHelper.IND_VOCAB + " LIKE '%" + query + "%'", null);
+    }
+
+    public Cursor searchMeanByVocab (String query) {
+        return database.rawQuery("SELECT " + DatabaseHelper.IND_MEANS + " FROM " + DATABASE_TABLE + " WHERE " +
+                DatabaseHelper.IND_VOCAB + " = '" + query + "'", null);
+    }
+
+    public final String getMeaningData(String search) {
+        Cursor cursor = searchMeanByVocab(search);
+        String result = new String();
+        cursor.moveToFirst();
+        if (cursor.getCount()>0) {
+            cursor.moveToFirst();
+            result = cursor.getString(0);
+        }
+        cursor.close();
+        return result;
     }
 
     public final ArrayList<String> getData(String search) {
