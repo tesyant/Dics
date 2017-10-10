@@ -131,13 +131,13 @@ public class EnglishHelper {
     public void insertTransaction(ArrayList<EnglishModel> englishModels) {
         String sql = "INSERT INTO " + DATABASE_TABLE + " ("
                 + DatabaseHelper.ENG_VOCAB + ", "
-                + DatabaseHelper.ENG_MEANS + ", " + ") VALUES (?, ?, ?, ?);";
+                + DatabaseHelper.ENG_MEANS + ") VALUES (?, ?);";
         database.beginTransaction();
 
         SQLiteStatement statement = database.compileStatement(sql);
         for (int i = 0; i < englishModels.size(); i++) {
             statement.bindString(1, englishModels.get(i).getVocab());
-            statement.bindString(3, englishModels.get(i).getMeans());
+            statement.bindString(2, englishModels.get(i).getMeans());
             statement.execute();
             statement.clearBindings();
         }
